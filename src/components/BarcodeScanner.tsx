@@ -3,14 +3,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Mic, Zap, Search, Package, CheckCircle } from 'lucide-react';
+import { Camera, Search, Package, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const BarcodeScanner = () => {
   const { toast } = useToast();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
-  const [isListening, setIsListening] = useState(false);
   const [scannedProducts, setScannedProducts] = useState<any[]>([]);
   const [lastScanned, setLastScanned] = useState<string>('');
 
@@ -22,7 +21,8 @@ const BarcodeScanner = () => {
       preco: 250.00, 
       estoque: 12,
       marca: 'Michelin',
-      categoria: 'Pneu Aro 15'
+      categoria: 'Pneu Aro 15',
+      lote: 'L240115'
     },
     { 
       codigo: '7891234567891', 
@@ -30,7 +30,8 @@ const BarcodeScanner = () => {
       preco: 320.00, 
       estoque: 8,
       marca: 'Bridgestone',
-      categoria: 'Pneu Aro 16'
+      categoria: 'Pneu Aro 16',
+      lote: 'L240120'
     },
     { 
       codigo: '7891234567892', 
@@ -38,7 +39,8 @@ const BarcodeScanner = () => {
       preco: 230.00, 
       estoque: 15,
       marca: 'Continental',
-      categoria: 'Pneu Aro 14'
+      categoria: 'Pneu Aro 14',
+      lote: 'L240118'
     }
   ];
 
@@ -95,53 +97,6 @@ const BarcodeScanner = () => {
     processScannedCode(randomProduct.codigo);
   };
 
-  // Função para comando de voz
-  const startVoiceCommand = () => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-      const recognition = new SpeechRecognition();
-      
-      recognition.lang = 'pt-BR';
-      recognition.continuous = false;
-      recognition.interimResults = false;
-
-      recognition.onstart = () => {
-        setIsListening(true);
-        toast({
-          title: "Escutando...",
-          description: "Diga o código de barras ou nome do produto",
-        });
-      };
-
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        processScannedCode(transcript);
-        setIsListening(false);
-      };
-
-      recognition.onerror = () => {
-        setIsListening(false);
-        toast({
-          title: "Erro no reconhecimento",
-          description: "Tente novamente",
-          variant: "destructive",
-        });
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognition.start();
-    } else {
-      toast({
-        title: "Recurso não disponível",
-        description: "Comando de voz não suportado neste navegador",
-        variant: "destructive",
-      });
-    }
-  };
-
   // Processar código escaneado
   const processScannedCode = (code: string) => {
     const product = mockProducts.find(p => 
@@ -189,12 +144,12 @@ const BarcodeScanner = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Scanner Inteligente</h2>
-          <p className="text-slate-600 dark:text-slate-400">Leitura de código de barras por câmera e comando de voz</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Scanner de Código de Barras</h2>
+          <p className="text-slate-600 dark:text-slate-400">Leitura rápida e precisa via câmera</p>
         </div>
-        <Badge variant="secondary" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-          <Zap className="w-3 h-3 mr-1" />
-          IA + Computer Vision
+        <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+          <Camera className="w-3 h-3 mr-1" />
+          Scanner Ativo
         </Badge>
       </div>
 
@@ -220,16 +175,6 @@ const BarcodeScanner = () => {
               >
                 <Camera className="w-4 h-4" />
                 {isCameraActive ? 'Parar Scanner' : 'Iniciar Scanner'}
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                onClick={startVoiceCommand}
-                disabled={isListening}
-                className="flex items-center gap-2"
-              >
-                <Mic className={`w-4 h-4 ${isListening ? 'text-red-500 animate-pulse' : ''}`} />
-                {isListening ? 'Escutando...' : 'Comando de Voz'}
               </Button>
 
               <Button 
@@ -336,6 +281,9 @@ const BarcodeScanner = () => {
                             <Badge variant="secondary" className="text-xs">
                               {product.categoria}
                             </Badge>
+                            <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700">
+                              Lote: {product.lote}
+                            </Badge>
                           </div>
                           <p className="text-sm text-slate-500">
                             Código: {product.codigo}
@@ -373,28 +321,20 @@ const BarcodeScanner = () => {
           <CardTitle>Como usar o Scanner</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="text-center p-4 border border-blue-200 dark:border-blue-800 rounded-lg">
               <Camera className="w-8 h-8 text-blue-600 mx-auto mb-2" />
               <h4 className="font-medium mb-2">Scanner Visual</h4>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Ative a câmera e aponte para o código de barras. A detecção é automática.
-              </p>
-            </div>
-            
-            <div className="text-center p-4 border border-purple-200 dark:border-purple-800 rounded-lg">
-              <Mic className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-              <h4 className="font-medium mb-2">Comando de Voz</h4>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Diga o código de barras ou nome do produto para busca inteligente.
+                Ative a câmera e aponte para o código de barras. A detecção é automática e precisa.
               </p>
             </div>
             
             <div className="text-center p-4 border border-green-200 dark:border-green-800 rounded-lg">
-              <Zap className="w-8 h-8 text-green-600 mx-auto mb-2" />
-              <h4 className="font-medium mb-2">IA Integrada</h4>
+              <Search className="w-8 h-8 text-green-600 mx-auto mb-2" />
+              <h4 className="font-medium mb-2">Busca Rápida</h4>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Reconhecimento inteligente com sugestões e correções automáticas.
+                Use a função "Simular Scan" para testar o sistema com produtos de demonstração.
               </p>
             </div>
           </div>

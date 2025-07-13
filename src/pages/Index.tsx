@@ -12,7 +12,6 @@ import {
   Users, 
   Package, 
   Camera, 
-  Mic,
   BarChart3,
   Trophy,
   Bell,
@@ -34,7 +33,7 @@ import StoreManagement from '@/components/StoreManagement';
 import UserManagement from '@/components/UserManagement';
 import Reports from '@/components/Reports';
 import BarcodeScanner from '@/components/BarcodeScanner';
-import GameCenter from '@/components/GameCenter';
+import StoreRanking from '@/components/StoreRanking';
 import Navigation from '@/components/Navigation';
 import { useToast } from '@/hooks/use-toast';
 
@@ -87,7 +86,7 @@ const Index = () => {
       users: "Usuários",
       reports: "Relatórios",
       scanner: "Scanner",
-      games: "Gamificação"
+      ranking: "Ranking"
     },
     en: {
       title: "TireSaaS - Smart Tire Management",
@@ -97,7 +96,7 @@ const Index = () => {
       users: "Users", 
       reports: "Reports",
       scanner: "Scanner",
-      games: "Gamification"
+      ranking: "Ranking"
     }
   };
 
@@ -188,8 +187,8 @@ const Index = () => {
                 <BarcodeScanner />
               </TabsContent>
 
-              <TabsContent value="games" className="space-y-6">
-                <GameCenter />
+              <TabsContent value="ranking" className="space-y-6">
+                <StoreRanking />
               </TabsContent>
             </Tabs>
           </div>

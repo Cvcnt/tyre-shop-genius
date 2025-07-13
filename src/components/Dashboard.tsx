@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +11,6 @@ import {
   Users, 
   Store,
   Brain,
-  Cloud,
   Zap,
   Target,
   AlertTriangle
@@ -21,7 +19,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 const Dashboard = () => {
   const [aiInsights, setAiInsights] = useState<any[]>([]);
-  const [weatherData, setWeatherData] = useState<any>(null);
 
   // Dados simulados para demonstração
   const salesData = [
@@ -48,16 +45,8 @@ const Dashboard = () => {
   ];
 
   useEffect(() => {
-    // Simulação de insights de IA
+    // Insights de IA focados em vendas e estoque
     const mockInsights = [
-      {
-        type: 'weather',
-        title: 'Previsão Climática',
-        message: 'Chuva prevista para próxima semana pode aumentar demanda por pneus em 15%',
-        confidence: 85,
-        icon: Cloud,
-        color: 'blue'
-      },
       {
         type: 'stock',
         title: 'Alerta de Estoque',
@@ -73,6 +62,14 @@ const Dashboard = () => {
         confidence: 78,
         icon: TrendingUp,
         color: 'green'
+      },
+      {
+        type: 'performance',
+        title: 'Performance da Loja',
+        message: 'Loja Sul superou meta em 12% este mês. Considere expandir estratégia',
+        confidence: 85,
+        icon: Target,
+        color: 'blue'
       }
     ];
 
@@ -167,7 +164,7 @@ const Dashboard = () => {
             <Zap className="w-5 h-5" />
             Insights Inteligentes
           </CardTitle>
-          <CardDescription>Recomendações baseadas em IA e dados externos</CardDescription>
+          <CardDescription>Recomendações baseadas em análise de dados</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">

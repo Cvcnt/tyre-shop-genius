@@ -1,6 +1,13 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User } from '@supabase/supabase-js';
+
+interface User {
+  id: string;
+  email: string;
+  user_metadata: {
+    name: string;
+  };
+}
 
 interface AuthContextType {
   user: User | null;
@@ -43,11 +50,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     // Simulação de usuário autenticado para demo
     setTimeout(() => {
-      const mockUser = {
+      const mockUser: User = {
         id: '1',
         email: 'joao@tiresaas.com',
         user_metadata: { name: 'João Silva' }
-      } as User;
+      };
 
       const mockProfile: UserProfile = {
         id: '1',
